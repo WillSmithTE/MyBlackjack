@@ -8,4 +8,13 @@ public interface Person {
 
     void haveTurn();
 
+    default void receive(Card card){
+        hand.add(card);
+    }
+    default int getScore(){
+        int score =0;
+        for (Card card:hand){
+            
+        }
+    }
 }
