@@ -5,11 +5,12 @@ import java.util.Scanner;
  * Created by Elber on 05-Aug-17.
  */
 public class Player extends Person{
-    private String name;
+
     private int chips;
     private int bet;
     private Dealer dealer;
     private Boolean bust;
+
     public Player(String name,Dealer dealer){
         this.name = name;
         chips = 500;
@@ -22,20 +23,27 @@ public class Player extends Person{
     public int getChips(){
         return chips;
     }
-    public void addChips(int chips){
-        this.chips+=chips;
-    }
     @Override
     public String toString(){
         return name + ": " + chips + " chips.";
+    }
+
+    public void setBet(int bet) {
+        this.bet=bet;
     }
 
     public void placeBet() {
         System.out.print(this + " How many chips would you like to bet? ");
         bet = new Scanner(System.in).nextInt();
     }
+
+    @Override
+    protected void stand(){
+            System.out.println(name + " stands with " + getScore());
+    }
+
     private void readChoice(){
-        System.out.print(name + ": "+ hand + " - Current score = "+getScore()+". ");
+        System.out.print(name + ": "+ getScore() + " " + hand + ". ");
         System.out.print("Hit, stand, double or split? ");
         String choice = new Scanner(System.in).nextLine();
         switch (choice.toLowerCase()){
@@ -58,19 +66,18 @@ public class Player extends Person{
     private void split() {
     }
 
-    private void stand() {
-        System.out.println(name + " stands with " + getScore());
-    }
-
-    private void hit() {
+    @Override
+    protected void hit(){
         dealer.dealCard(this);
         checkBust();
     }
-    private void checkBust(){
+
+
+    protected void checkBust(){
         if (notBust()) {
             readChoice();
         }
-        System.out.println("You went bust with " + getScore()+ " "+hand);
+        else System.out.println("You went bust with " + getScore()+ " "+hand);
     }
 
     private void help(){
@@ -79,5 +86,11 @@ public class Player extends Person{
         System.out.println("Double down: Increase the initial bet by 100% and commit to stand after receiving exactly one more card.");
         System.out.println("Split: If the first two cards of your hand have the same value, you can split them into two hands, by placing a second bet equal to the first. The dealer separates the two cards and draws an additional card on each, placing one bet with each hand. The player then plays out the two separate hands in turn.");
         readChoice();
+    }
+    public void determinePayout(int dealersScore) {
+        if ((dealersScore>=this.getScore()&&dealer.notBust())||!notBust()){
+            chips-=bet;
+        }
+        else chips+=bet;
     }
 }

@@ -5,6 +5,7 @@ import java.util.ArrayList;
  */
 public abstract class Person {
     ArrayList<Card> hand = new ArrayList<>();
+    protected String name;
 
     public abstract void haveTurn();
 
@@ -18,7 +19,16 @@ public abstract class Person {
         }
         return score;
     }
+    protected abstract void stand();
+
+    protected abstract void hit();
+
+
     public boolean notBust() {
         return getScore()<=21;
+    }
+
+    public void clearHand() {
+        hand.clear();
     }
 }

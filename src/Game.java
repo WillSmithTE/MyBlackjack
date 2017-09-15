@@ -1,6 +1,5 @@
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Scanner;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by Elber on 05-Aug-17.
@@ -31,7 +30,10 @@ public class Game {
             player.placeBet();
         }
         dealer.runTurns();
-        getLeaderboard();
+        showLeaderboard();
+        for (Person person:everyone){
+            person.clearHand();
+        }
         keepPlaying = playAgain();
         }
 
@@ -57,20 +59,11 @@ public class Game {
     }
 
 
-    private void getLeaderboard() {
-        int max=0;
+    private void showLeaderboard() {
         ArrayList<Player> leaderboard = players;
-        Player maxChips = leaderboard.get(0);
-        for (int j=leaderboard.size()-1;j>0;j--){
-            for (int i=0;i<=j;i++) {
-                if (leaderboard.get(i).getChips() > max) {
-                    max = leaderboard.get(i).getChips();
-                    maxChips = leaderboard.get(i);
-                }
-            }
-            Collections.swap(leaderboard,leaderboard.indexOf(maxChips),j);
-    }
-    for (Player player:leaderboard){
+        leaderboard.sort(Comparator.comparing(Player::getChips));
+        Collections.reverse(leaderboard);
+        for (Player player:leaderboard){
             System.out.println(leaderboard.indexOf(player)+1+". " + player);
     }
 

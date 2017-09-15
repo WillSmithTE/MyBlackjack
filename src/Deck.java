@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Created by Elber on 05-Aug-17.
@@ -17,6 +18,7 @@ public class Deck {
     }
 
     public void shuffle() {
+        Collections.shuffle(cards);
     }
 
     public Card dealCard() {

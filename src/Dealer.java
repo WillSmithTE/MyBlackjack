@@ -10,10 +10,24 @@ public class Dealer extends Person{
     Deck deck;
     public Dealer(Deck deck){
         this.deck=deck;
+        this.name = "dealer";
     }
     @Override
     public void haveTurn(){
+        while (getScore()<17){
+            System.out.println(name + ": "+getScore()+" "+ hand+".");
+            hit();
+        }
+        if (notBust()) stand();
+        else System.out.println("Dealer went bust with " + getScore()+ " "+hand);
+        payout();
+    }
 
+    private void payout(){
+        for (Player player:players) {
+                    player.determinePayout(getScore());
+                    player.setBet(0);
+        }
     }
 
     public void deal() {
@@ -37,6 +51,16 @@ public class Dealer extends Person{
         for (Player player:players)
             player.haveTurn();
         haveTurn();
+    }
+
+    @Override
+    protected void hit(){
+        dealCard(this);
+    }
+
+    @Override
+    protected void stand(){
+        System.out.println(name + " stands with " + getScore() + " " + hand);
     }
 
     public void assignPlayers(ArrayList<Player> players) {
