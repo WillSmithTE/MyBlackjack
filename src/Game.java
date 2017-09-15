@@ -11,6 +11,7 @@ public class Game {
     private ArrayList<Player> players = new ArrayList<>();
     private Boolean keepPlaying = true;
     private Scanner scanner = new Scanner(System.in);
+    private Dealer dealer;
     public Game(){
         gameSetup();
     }
@@ -26,8 +27,10 @@ public class Game {
     }
 
     private void playRound() {
-        for (Person person:everyone)
-            person.haveTurn();
+        for (Player player:players){
+            player.placeBet();
+        }
+        dealer.runTurns();
         getLeaderboard();
         keepPlaying = playAgain();
         }
@@ -76,11 +79,12 @@ public class Game {
     private void gameSetup(){
         ArrayList<String> playerNames = readPlayers();
         for (String name:playerNames){
-            Player player = new Player(name);
+            Player player = new Player(name,dealer);
             players.add(player);
             everyone.add((Person) player);
         }
-        everyone.add(new Dealer());
+        dealer = new Dealer(players,new Deck());
+        everyone.add(dealer);
     }
 
     private ArrayList<String> readPlayers(){
