@@ -9,6 +9,7 @@ public class Player extends Person{
     private int chips;
     private int bet;
     private Dealer dealer;
+    private Boolean bust;
     public Player(String name,Dealer dealer){
         this.name = name;
         chips = 500;
@@ -49,10 +50,7 @@ public class Player extends Person{
     private void doub() {
         bet *=2;
         dealer.dealCard(this);
-        if (notBust()) {
-            readChoice();
-        }
-        System.out.println("You busted with " + getScore());
+        checkBust();
     }
 
 
@@ -66,10 +64,13 @@ public class Player extends Person{
 
     private void hit() {
         dealer.dealCard(this);
+        checkBust();
+    }
+    private void checkBust(){
         if (notBust()) {
             readChoice();
         }
-        System.out.println("You busted with " + getScore());
+        System.out.println("You went bust with " + getScore()+ " "+hand);
     }
 
     private void help(){

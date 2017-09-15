@@ -13,7 +13,7 @@ public class Game {
     private Scanner scanner = new Scanner(System.in);
     private Dealer dealer;
     public Game(){
-        gameSetup();
+        this.dealer = gameSetup();
     }
     public static void main(String[] args){
         new Game().play();
@@ -76,15 +76,17 @@ public class Game {
 
 }
 
-    private void gameSetup(){
+    private Dealer gameSetup(){
+        Dealer dealer = new Dealer(new Deck());
         ArrayList<String> playerNames = readPlayers();
         for (String name:playerNames){
             Player player = new Player(name,dealer);
             players.add(player);
             everyone.add((Person) player);
         }
-        dealer = new Dealer(players,new Deck());
+        dealer.assignPlayers(players);
         everyone.add(dealer);
+        return dealer;
     }
 
     private ArrayList<String> readPlayers(){

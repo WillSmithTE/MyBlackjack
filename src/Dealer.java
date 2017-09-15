@@ -8,8 +8,7 @@ import java.util.ArrayList;
 public class Dealer extends Person{
     ArrayList<Player> players = new ArrayList<>();
     Deck deck;
-    public Dealer(ArrayList<Player> players, Deck deck){
-        this.players = players;
+    public Dealer(Deck deck){
         this.deck=deck;
     }
     @Override
@@ -38,5 +37,9 @@ public class Dealer extends Person{
         for (Player player:players)
             player.haveTurn();
         haveTurn();
+    }
+
+    public void assignPlayers(ArrayList<Player> players) {
+        this.players=players;
     }
 }
