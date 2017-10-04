@@ -102,11 +102,7 @@ public class Player extends Person{
     }
 
     private boolean matchingCards() {
-        Iterator i = hand.iterator();
-        while (i.hasNext()){
-            return i == i.next();
-        }
-        return false;
+        return hand.get(0).getScore()==hand.get(1).getScore();
     }
 
     @Override
