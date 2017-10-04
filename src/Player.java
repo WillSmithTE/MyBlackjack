@@ -90,11 +90,11 @@ public class Player extends Person{
     public void determinePayout(int dealersScore) {
         if ((dealersScore>=this.getScore()&&dealer.notBust())||!notBust()){
             chips-=bet;
-            System.out.println(name + " loses "+bet);
+            System.out.println(name + " loses "+bet + " chips");
         }
         else {
             chips+=bet;
-            System.out.println(name + " wins "+bet);
+            System.out.println(name + " wins "+bet+" chips");
         }
     }
 }

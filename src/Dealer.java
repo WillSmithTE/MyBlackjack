@@ -1,5 +1,6 @@
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -16,15 +17,18 @@ public class Dealer extends Person{
     public void haveTurn(){
         while (getScore()<17){
             System.out.println(name + ": "+getScore()+" "+ hand+".");
+            waitSecond();
             hit();
         }
         if (notBust()) stand();
         else System.out.println("Dealer went bust with " + getScore()+ " "+hand);
+        waitSecond();
         payout();
     }
 
     private void payout(){
         for (Player player:players) {
+            waitSecond();
                     player.determinePayout(getScore());
                     player.setBet(0);
         }
@@ -65,5 +69,13 @@ public class Dealer extends Person{
 
     public void assignPlayers(ArrayList<Player> players) {
         this.players=players;
+    }
+
+    private void waitSecond() {
+        try {
+            TimeUnit.SECONDS.sleep(1);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }
