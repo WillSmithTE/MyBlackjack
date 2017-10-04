@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Scanner;
 
 /**
@@ -18,7 +19,7 @@ public class Player extends Person{
     }
     @Override
     public void haveTurn(){
-        readChoice();
+        offerChoices();
     }
     public int getChips(){
         return chips;
@@ -35,6 +36,11 @@ public class Player extends Person{
     public void placeBet() {
         System.out.print(this + " How many chips would you like to bet? ");
         bet = new Scanner(System.in).nextInt();
+        while (bet>chips){
+            System.out.print("Can't afford to bet "+bet+" chips. Enter a value <= "+chips+": ");
+            bet = new Scanner(System.in).nextInt();
+        }
+
     }
 
     @Override
@@ -42,16 +48,34 @@ public class Player extends Person{
             System.out.println(name + " stands with " + getScore());
     }
 
-    private void readChoice(){
+    private void offerChoices(){
+        printHand();
+        readChoice();
+
+    }
+
+    private void printHand() {
         System.out.print(name + ": "+ getScore() + " " + hand + ". ");
+    }
+
+    private void readChoice() {
         System.out.print("Hit, stand, double or split? ");
         String choice = new Scanner(System.in).nextLine();
-        switch (choice.toLowerCase()){
-            case "hit":hit();break;
-            case "stand":stand();break;
-            case "double":doub();break;
-            case "split":split();break;
-            default:help();
+        switch (choice.toLowerCase()) {
+            case "hit":
+                hit();
+                break;
+            case "stand":
+                stand();
+                break;
+            case "double":
+                doub();
+                break;
+            case "split":
+                split();
+                break;
+            default:
+                help();
         }
     }
 
@@ -64,6 +88,25 @@ public class Player extends Person{
 
 
     private void split() {
+        if (canSplit()){
+
+        }
+        else {
+            System.out.print("Cannot split (must have only 2 cards of equal value). ");
+            readChoice();
+        }
+    }
+
+    private boolean canSplit() {
+        return hand.size()==2 && matchingCards();
+    }
+
+    private boolean matchingCards() {
+        Iterator i = hand.iterator();
+        while (i.hasNext()){
+            return i == i.next();
+        }
+        return false;
     }
 
     @Override
@@ -75,6 +118,7 @@ public class Player extends Person{
 
     protected void checkBust(){
         if (notBust()) {
+            printHand();
             readChoice();
         }
         else System.out.println("You went bust with " + getScore()+ " "+hand);
