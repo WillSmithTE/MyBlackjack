@@ -1,4 +1,6 @@
+import java.io.Serializable;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -11,35 +13,46 @@ public class Game {
     private Boolean keepPlaying = true;
     private Scanner scanner = new Scanner(System.in);
     private Dealer dealer;
-    public Game(){
+
+    public Game() {
         this.dealer = gameSetup();
     }
-    public static void main(String[] args){
+
+    public static void main(String[] args) {
         new Game().play();
 
     }
-    private void play(){
-        while (keepPlaying){
+
+    private void play() {
+        while (keepPlaying) {
             playRound();
         }
         System.out.println("Goodbye");
     }
 
+    public ArrayList<Person> getEveryone() {
+        return everyone;
+    }
+
+    public ArrayList<Player> getPlayers() {
+        return players;
+    }
+
     private void playRound() {
-        for (Player player:players){
+        for (Player player : players) {
             player.placeBet();
         }
         dealer.runTurns();
         showLeaderboard();
-        for (Person person:everyone){
+        for (Person person : getEveryone()) {
             person.clearHand();
         }
         keepPlaying = playAgain();
-        }
+    }
 
     private Boolean playAgain() {
         String response = null;
-        while (response!="y"&&response!="n") {
+        while (response != "y" && response != "n") {
             response = readPlayAgain();
             switch (response) {
                 case "y":
@@ -53,27 +66,36 @@ public class Game {
         return null;
     }
 
-    private String readPlayAgain(){
+    private String readPlayAgain() {
         System.out.print("Play again? (y/n):");
         return scanner.nextLine().toLowerCase();
     }
 
 
     private void showLeaderboard() {
-        ArrayList<Player> leaderboard = players;
-        leaderboard.sort(Comparator.comparing(Player::getChips));
-        Collections.reverse(leaderboard);
-        for (Player player:leaderboard){
-            System.out.println(leaderboard.indexOf(player)+1+". " + player);
+        ArrayList<Player> leaderboard = generateLeaderboard();
+        for (Player player : leaderboard) {
+            System.out.println(leaderboard.indexOf(player) + 1 + ". " + player);
+        }
     }
 
-}
+    private ArrayList<Player> generateLeaderboard() {
+        ArrayList<Player> leaderboard = getPlayers();
+        leaderboard.sort(chipComparator(Player::getChips));
+        return leaderboard;
+    }
 
-    private Dealer gameSetup(){
+    public static <T, U extends Comparable<? super U>> Comparator<T> chipComparator(
+            Function<? super T, ? extends U> keyExtractor) {
+        Objects.requireNonNull(keyExtractor);
+        return (count1, count2) -> keyExtractor.apply(count2).compareTo(keyExtractor.apply(count1));
+    }
+
+    private Dealer gameSetup() {
         Dealer dealer = new Dealer(new Deck());
         ArrayList<String> playerNames = readPlayers();
-        for (String name:playerNames){
-            Player player = new Player(name,dealer);
+        for (String name : playerNames) {
+            Player player = new Player(name, dealer);
             players.add(player);
             everyone.add((Person) player);
         }
@@ -82,14 +104,14 @@ public class Game {
         return dealer;
     }
 
-    private ArrayList<String> readPlayers(){
-        ArrayList<String> players= new ArrayList<>();
+    private ArrayList<String> readPlayers() {
+        ArrayList<String> players = new ArrayList<>();
 
         System.out.print("How many players? ");
-        int playerCount = scanner.nextInt();
+        playerCount = scanner.nextInt();
         scanner.nextLine();
-        for (int i=1;i<=playerCount;i++){
-            System.out.print("Player "+i+"'s name: ");
+        for (int i = 1; i <= playerCount; i++) {
+            System.out.print("Player " + i + "'s name: ");
             players.add(scanner.nextLine());
         }
         return players;
